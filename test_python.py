@@ -1,7 +1,13 @@
-def main():
-    print('Hello Python PullRequest')
-    for index, value in enumerate(range(3)):
-        print(f'index:{index} value:{value}')
+from flask import Flask
+from redis import Redis
 
-if __name__ == '__main__':
-    main()
+app = Flask(__name__)
+redis = Redis(host='redis', port=6379)
+
+@app.route('/')
+def hello():
+    count = redis.incr('hits')
+    return 'Hello World! I have been seen {} times.\n'.format(count)
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", debug=True)
